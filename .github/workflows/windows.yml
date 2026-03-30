@@ -15,10 +15,8 @@ jobs:
     
     steps:
     - name: Checkout Git Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    # BEST PRACTICE: Use the official MSYS2 action to guarantee 
-    # make and gcc are installed and in the PATH correctly.
     - name: Install MinGW via MSYS2
       uses: msys2/setup-msys2@v2
       with:
@@ -28,17 +26,13 @@ jobs:
           mingw-w64-x86_64-gcc
           mingw-w64-x86_64-make
 
-    # CRITICAL FIX: Use 'shell: msys2 {0}' so the Makefile 
-    # variables (CC=gcc) are parsed correctly.
     - name: Build
       shell: msys2 {0}
       run: |
         make -j4 CC=gcc
 
-    # SAFER UPLOAD: Uses a wildcard to find the exe regardless 
-    # of which folder the Makefile put it in.
-    - name: Upload zip
-      uses: actions/upload-artifact@v3
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
       with:
           name: luna-win64
           path: "**/*.exe" 
